@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,14 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "address")
-public class Address {
-
+public class AddressStatus {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String zipcode;
-	private String street;
-	private String district;
-	private String city;
-	private String state;
+	private Long id;
+	private Status status;
 }
