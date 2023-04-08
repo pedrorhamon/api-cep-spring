@@ -1,7 +1,10 @@
 package com.starking.correios.services;
 
+import java.io.IOException;
+
 import org.springframework.stereotype.Service;
 
+import com.starking.correios.CorreiosApplication;
 import com.starking.correios.exception.NoContentException;
 import com.starking.correios.exception.NotReadyException;
 import com.starking.correios.model.Address;
@@ -42,12 +45,24 @@ public class CorreiosService {
 				.status(status).build());
 	}
 	
-	public void setup() {
+	protected void setupOnStartup() {
+		try {
+			this.setup();
+		}catch(Exception e) {
+			CorreiosApplication.close(999);
+		}
+	}
+	
+	public void setup() throws IOException {
 		if(this.getStatus().equals(Status.READY)) {
 			this.saveStatus(Status.SETUP_RUNNING);
 			
-			this.addressRepository.saveAll(this.setupRepository.getFromOrigin());
-			
+			try {
+				this.addressRepository.saveAll(this.setupRepository.getFromOrigin());
+			}catch(Exception e) {
+				this.saveStatus(Status.NEED_SETUP);
+				throw e;
+			}
 			this.saveStatus(Status.READY);
 		}
 	}
