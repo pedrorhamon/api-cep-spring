@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.starking.correios.exception.NoContentException;
+import com.starking.correios.exception.NotReadyException;
 import com.starking.correios.model.Address;
 import com.starking.correios.services.CorreiosService;
 
@@ -22,7 +23,7 @@ public class CorreiosController {
 	}
 
 	@GetMapping("/zipcode/{zipcode}")
-	public Address getAddressByZipCode(@PathParam("zipcode") String zipcode) throws NoContentException {
+	public Address getAddressByZipCode(@PathParam("zipcode") String zipcode) throws NoContentException, NotReadyException {
 		return this.service.getAddressByZipcode(zipcode);
 	}
 

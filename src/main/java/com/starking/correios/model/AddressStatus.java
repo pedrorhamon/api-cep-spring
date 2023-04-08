@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class AddressStatus {
 	
+	public static final Long DEFAULT_ID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
