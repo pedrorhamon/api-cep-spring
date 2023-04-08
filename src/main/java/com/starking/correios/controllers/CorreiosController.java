@@ -1,30 +1,27 @@
 package com.starking.correios.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.starking.correios.exception.NoContentException;
 import com.starking.correios.exception.NotReadyException;
 import com.starking.correios.model.Address;
 import com.starking.correios.services.CorreiosService;
 
-import jakarta.websocket.server.PathParam;
-import lombok.RequiredArgsConstructor;
-
 @RestController
-@RequiredArgsConstructor
 public class CorreiosController {
+	@Autowired
+	private CorreiosService service;
 	
-	private final CorreiosService service;
-
-	@GetMapping("/status")
-	public String getStatus() {
-		return "Service status: " + this.service.getStatus();
+	@GetMapping("status")
+	public String get() {
+		return "Correios Service is " + service.getStatus();
 	}
-
-	@GetMapping("/zipcode/{zipcode}")
-	public Address getAddressByZipCode(@PathParam("zipcode") String zipcode) throws NoContentException, NotReadyException {
-		return this.service.getAddressByZipcode(zipcode);
+	
+	@GetMapping("zip/{zipcode}")
+	public Address getByZipcode(
+			@PathVariable("zipcode") String zipcode) throws NotReadyException  {
+		return this.service.getByZipcode(zipcode);
 	}
-
 }

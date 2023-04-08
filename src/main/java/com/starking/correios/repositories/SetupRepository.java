@@ -1,6 +1,5 @@
 package com.starking.correios.repositories;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,35 +17,35 @@ import com.starking.correios.model.Address;
 
 @Repository
 public class SetupRepository {
-	
-	@Value("${correios.base.url}")
-	private String url;
-	
-	public List<Address> getFromOrigin() throws IOException{
-		List<Address> resultList = new ArrayList<>();
-		String resultStr = "";
+
+	@Value("${setup.origin.url}")
+	private String completeUrl;
+
+	public List<Address> listAdressesFromOrigin() throws Exception {
+		List<Address> result = new ArrayList<>();
+		String resultStr = null;
 		
 		try (CloseableHttpClient httpClient = HttpClients.createDefault();
-			CloseableHttpResponse response = httpClient.execute(new HttpGet(this.url))) {
-			
+				CloseableHttpResponse response = httpClient.execute(new HttpGet(completeUrl))) {
+
 			HttpEntity entity = response.getEntity();
 			resultStr = EntityUtils.toString(entity);
 		}
-		
-		String[] resultStrSplited = resultStr.split("\n");
-		
-		for(String currentLine : resultStrSplited) {
-			String[] currentLineSplited = currentLine.split(",");
-			
-			resultList.add(Address.builder()
-					.state(currentLineSplited[0])
-					.city(currentLineSplited[1])
-					.district(currentLineSplited[2])
-					.zipcode(StringUtils.leftPad(currentLineSplited[3], 8, "8"))
-					.street(currentLineSplited.length > 3 ? currentLineSplited[4] : null)
-					.build());
+
+		for (String current : resultStr.split("\n")) {
+			String[] currentSplited = current.split(",");
+
+			if (currentSplited[0].length() > 2) // breaks the header line, if exists
+				continue;
+
+			result.add(Address.builder()
+					.state(currentSplited[0])
+					.city(currentSplited[1])
+					.district(currentSplited[2])
+					.zipcode(StringUtils.leftPad(currentSplited[3], 8, "0"))
+					.street(currentSplited.length > 4 ? currentSplited[4] : null).build());
 		}
-		
-		return resultList;
+
+		return result;
 	}
 }

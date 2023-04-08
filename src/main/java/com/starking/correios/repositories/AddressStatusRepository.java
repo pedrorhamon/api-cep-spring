@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.starking.correios.model.AddressStatus;
 
-public interface AddressStatusRepository extends JpaRepository<AddressStatus, Long>{
+public interface AddressStatusRepository extends JpaRepository<AddressStatus, Integer>{
 
 }
