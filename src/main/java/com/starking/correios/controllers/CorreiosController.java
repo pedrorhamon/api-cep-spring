@@ -16,7 +16,7 @@ public class CorreiosController {
 	
 	@GetMapping("status")
 	public String get() {
-		return "Correios Service is " + service.getStatus();
+		return "Correios Service is: " + service.getStatus();
 	}
 	
 	@GetMapping("zip/{zipcode}")
